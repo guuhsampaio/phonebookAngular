@@ -1,0 +1,9 @@
+.text-color-disabled {
+    color: #e0e0e0 !important;
+}
+
+.svg-disabled {
+    pointer-events: none;
+    color: #e0e0e0 !important;
+
+}

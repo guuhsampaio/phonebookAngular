@@ -1,0 +1,71 @@
+ <div class="container">
+    <div class="d-flex align-items-center flex-column" id="accordion">
+        <div class="m-4">
+            <input type="input" class="form-control" id="search" placeholder="Pesquisar..." (input)="searchContacts($event)">
+        </div>
+        <div *ngFor="let contact of contacts; let i = index" class="card m-2 w-50">
+            <div class="card-body">
+                <h5 class="card-title d-flex justify-content-between" [ngClass]="{'text-color-disabled': contact.ativo == '0'}">      
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" [attr.data-bs-target]="'#flush-collapse' + i"  aria-expanded="false" [attr.aria-controls]="'flush-collapse' + i">
+                    {{contact.nome}}
+                    </button>
+                <div *ngIf="contact.ativo == '1'">
+                    <svg *ngIf="contact.favorito == '0'" xmlns="http://www.w3.org/2000/svg" style="cursor: pointer" (click)="favoriteContact(contact.id)" width="24" height="24" fill="currentColor" class="bi bi-star" viewBox="0 0 16 16">
+                        <title>Favoritar</title>
+                        <path d="M2.866 14.85c-.078.444.36.791.746.593l4.39-2.256 4.389 2.256c.386.198.824-.149.746-.592l-.83-4.73 3.522-3.356c.33-.314.16-.888-.282-.95l-4.898-.696L8.465.792a.513.513 0 0 0-.927 0L5.354 5.12l-4.898.696c-.441.062-.612.636-.283.95l3.523 3.356-.83 4.73zm4.905-2.767-3.686 1.894.694-3.957a.56.56 0 0 0-.163-.505L1.71 6.745l4.052-.576a.53.53 0 0 0 .393-.288L8 2.223l1.847 3.658a.53.53 0 0 0 .393.288l4.052.575-2.906 2.77a.56.56 0 0 0-.163.506l.694 3.957-3.686-1.894a.5.5 0 0 0-.461 0z"/>
+                    </svg>
+                    <svg *ngIf="contact.favorito == '1'"xmlns="http://www.w3.org/2000/svg" style="cursor: pointer" (click)="favoriteContact(contact.id)" width="24" height="24" fill="#f9e102" class="bi bi-star-fill" viewBox="0 0 16 16">
+                        <title>Desfavoritar</title>
+                        <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"/>
+                    </svg>
+                </div>
+                </h5>
+                <h6 class="card-subtitle mb-4 text-muted" [ngClass]="{'text-color-disabled': contact.ativo == '0'}">{{contact.celular | mask: '(00) 00000-0000'}}</h6>
+                <div [id]="'flush-collapse' + i" class="accordion-collapse collapse" data-bs-parent="#accordion">
+                    <p class="card-text mb-1 text-muted" [ngClass]="{'text-color-disabled': contact.ativo == '0'}">Telefone: {{contact.telefone | mask: '(00) 0000-0000' }}</p>
+                    <p class="card-text mb-1 text-muted" [ngClass]="{'text-color-disabled': contact.ativo == '0'}">Email: {{contact.email}}</p>
+                    <div class="d-flex align-items-end flex-column">
+                        <div class="mt-auto p-1">
+                            <svg xmlns="http://www.w3.org/2000/svg" *ngIf="contact.ativo=='1'" (click)="desactiveContact(contact.id)" 
+                                style="cursor: pointer" width="24" height="24" fill="currentColor" class="bi bi-dash-circle mx-2" viewBox="0 0 16 16">
+                                <title>Desabilitar</title>
+                                <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
+                                <path d="M4 8a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7A.5.5 0 0 1 4 8"/>
+                              </svg>
+                              <svg xmlns="http://www.w3.org/2000/svg" *ngIf="contact.ativo=='0'" (click)="desactiveContact(contact.id)" width="24" height="24" fill="currentColor" style="cursor: pointer" class="bi bi-check-circle mx-2" viewBox="0 0 16 16">
+                                <title>Habibilitar</title>
+                                <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
+                                <path d="m10.97 4.97-.02.022-3.473 4.425-2.093-2.094a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-1.071-1.05"/>
+                              </svg>
+                            <svg xmlns="http://www.w3.org/2000/svg" [routerLink]="['/edit-contact', contact.id]" width="24" height="24" fill="currentColor" style="cursor: pointer" class="bi bi-pencil-square mx-2" [ngClass]="{'svg-disabled': contact.ativo == '0'}" viewBox="0 0 16 16">
+                                <title>Editar</title>
+                                <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+                                <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"/>
+                            </svg>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" (click)="deleteContact(contact.id)" style="cursor: pointer" height="24" fill="currentColor" class="bi bi-trash3 mx-2" [ngClass]="{'svg-disabled': contact.ativo == '0'}" viewBox="0 0 16 16">
+                                <title>Remover</title>
+                                <path d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5M11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1zm1.958 1-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47M8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5"/>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div *ngIf="mostrarButtonDesfazer;" class="d-flex align-items-center flex-column fixed-bottom">
+    <div class="mt-auto p-4 w-50"> 
+        <button type="button" (click)="undoDeleteContact(undoId);" class="btn btn-danger w-100">Desfazer</button>
+        <div class="progress" role="progressbar" aria-label="Danger" aria-valuenow="100" aria-valuemin="100" aria-valuemax="0">
+            <div class="progress-bar bg-danger" [style.width]="progress + '%'"></div>
+          </div>
+    </div>
+</div>
+<div class="d-flex align-items-end flex-column" style="position: fixed; bottom: 0; right: 0; margin-bottom: 16px; margin-right: 16px;">
+    <div class="p-4"> 
+        <svg [routerLink]="['/add-contact']" xmlns="http://www.w3.org/2000/svg" width="40" height="40" style="cursor: pointer" fill="currentColor" class="bi bi-plus-square-fill" viewBox="0 0 16 16">
+            <title>Adicionar</title>
+            <path d="M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2zm6.5 4.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3a.5.5 0 0 1 1 0"/>
+        </svg>
+    </div>
+</div>
